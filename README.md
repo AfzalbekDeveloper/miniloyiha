@@ -24,5 +24,5 @@ Then open `http://localhost:8000`.
 
 1. Push the project files to a Git repository.
 2. Import the repository in Vercel and keep the project root as the Root Directory.
-3. Choose the **Other** framework preset. No build command or output directory is required.
-4. Deploy. Vercel serves `index.html` and the local assets directly.
+3. `vercel.json` selects the **Other** preset, disables the build command, and serves the project root.
+4. If the Vercel dashboard still shows Python, change the Framework Preset to **Other**, clear any custom build command, and redeploy.
