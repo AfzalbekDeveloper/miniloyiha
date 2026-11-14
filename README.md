@@ -1,16 +1,28 @@
 # MPG Explorer
 
-Interactive vehicle fuel-efficiency dashboard built with Streamlit and the Seaborn MPG dataset.
+Responsive, interactive vehicle-efficiency dashboard built as a static site. It uses the Seaborn MPG dataset in `data/mpg.json` and requires no server-side runtime.
 
 ## Run locally
 
+From the project directory, start a static web server:
+
 ```bash
-pip install -r requirements.txt
-streamlit run app.py
+python3 -m http.server 8000
 ```
 
-## Deploy to Streamlit Community Cloud
+Then open `http://localhost:8000`.
 
-1. Push `app.py` and `requirements.txt` to a GitHub repository.
-2. Create an app at [share.streamlit.io](https://share.streamlit.io/).
-3. Select the repository, branch, and `app.py` as the main file.
+## Deploy to Vercel
+
+### Quick deploy
+
+1. Open [Vercel Drop](https://vercel.com/drop).
+2. Drag the project folder into the page. Do not include `.venv`.
+3. Vercel deploys the static site and provides a public URL.
+
+### Deploy from Git
+
+1. Push the project files to a Git repository.
+2. Import the repository in Vercel and keep the project root as the Root Directory.
+3. Choose the **Other** framework preset. No build command or output directory is required.
+4. Deploy. Vercel serves `index.html` and the local assets directly.

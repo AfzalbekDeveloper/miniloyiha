@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Avtomobillarning yoqilg'i tejamkorligini MPG dataset orqali tahlil qiling."
+    />
+    <meta name="theme-color" content="#f3f6fb" />
+    <title>MPG Explorer — Avtomobil tahlili</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./dashboard.js" defer></script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">MPG EXPLORER <span>·</span> AVTO TAHLILI</p>
+          <h1>Avtomobil samaradorligi</h1>
+          <p class="hero-description">
+            Yoqilg'i tejamkorligini avtomobil turi, og'irligi va ishlab
+            chiqarilgan yili bo'yicha o'rganing.
+          </p>
+        </div>
+        <div class="hero-note">
+          <span class="status-dot"></span>
+          <span>1970–1982 dataset</span>
+        </div>
+      </header>
+
+      <div id="loading" class="notice" role="status">Dataset yuklanmoqda...</div>
+      <div id="error" class="notice notice-error" role="alert" hidden>
+        Datasetni yuklab bo'lmadi. Sahifani qayta yuklab ko'ring.
+      </div>
+
+      <main id="dashboard" class="dashboard-layout" hidden>
+        <aside class="filter-panel" aria-label="Dashboard filtrlari">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">SOZLAMALAR</p>
+              <h2>Filtrlar</h2>
+            </div>
+            <span class="filter-icon" aria-hidden="true">⌘</span>
+          </div>
+
+          <label class="field-label" for="origin-filter">Hudud</label>
+          <select id="origin-filter" class="select-control">
+            <option value="all">Barcha hududlar</option>
+            <option value="usa">AQSH</option>
+            <option value="europe">Yevropa</option>
+            <option value="japan">Yaponiya</option>
+          </select>
+
+          <fieldset class="cylinder-fieldset">
+            <legend class="field-label">Silindrlar soni</legend>
+            <div id="cylinder-options" class="check-list"></div>
+          </fieldset>
+
+          <div class="year-fields">
+            <label>
+              <span class="field-label">Yildan</span>
+              <select id="year-from" class="select-control"></select>
+            </label>
+            <label>
+              <span class="field-label">Yilgacha</span>
+              <select id="year-to" class="select-control"></select>
+            </label>
+          </div>
+
+          <button id="reset-filters" class="reset-button" type="button">
+            Filtrlarni tiklash
+          </button>
+
+          <div class="filter-footnote">
+            <span class="footnote-mark">i</span>
+            <p>Ko'rsatkichlar tanlangan filtrlarga qarab yangilanadi.</p>
+          </div>
+        </aside>
+
+        <section class="dashboard-content" aria-label="MPG ko'rsatkichlari">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">UMUMIY KO'RINISH</p>
+              <h2>Dashboard</h2>
+            </div>
+            <p id="result-count" class="result-count"></p>
+          </div>
+
+          <div class="metric-grid">
+            <article class="metric-card">
+              <p class="metric-label">Avtomobillar</p>
+              <p id="metric-count" class="metric-value">—</p>
+              <p class="metric-note">filtrlangan yozuvlar</p>
+            </article>
+            <article class="metric-card">
+              <p class="metric-label">O'rtacha tejamkorlik</p>
+              <p id="metric-average" class="metric-value">—</p>
+              <p class="metric-note">MPG bo'yicha</p>
+            </article>
+            <article class="metric-card">
+              <p class="metric-label">Eng yuqori MPG</p>
+              <p id="metric-maximum" class="metric-value">—</p>
+              <p class="metric-note">eng tejamkor model</p>
+            </article>
+            <article class="metric-card">
+              <p class="metric-label">O'rtacha og'irlik</p>
+              <p id="metric-weight" class="metric-value">—</p>
+              <p class="metric-note">funt (lb)</p>
+            </article>
+          </div>
+
+          <div id="empty-state" class="empty-state" hidden>
+            Tanlangan filtrlarga mos avtomobil topilmadi. Filtrlarni
+            o'zgartiring.
+          </div>
+
+          <div id="charts" class="chart-grid">
+            <article class="chart-card chart-card-wide">
+              <div class="chart-heading">
+                <div>
+                  <p class="chart-kicker">BOG'LIQLIK</p>
+                  <h3>Og'irlik va yoqilg'i tejamkorligi</h3>
+                </div>
+                <span class="chart-unit">MPG / lb</span>
+              </div>
+              <div id="scatter-chart" class="chart-slot"></div>
+            </article>
+
+            <article class="chart-card">
+              <div class="chart-heading">
+                <div>
+                  <p class="chart-kicker">VAQT BO'YICHA</p>
+                  <h3>Yillar bo'yicha o'rtacha MPG</h3>
+                </div>
+              </div>
+              <div id="year-chart" class="chart-slot"></div>
+            </article>
+
+            <article class="chart-card">
+              <div class="chart-heading">
+                <div>
+                  <p class="chart-kicker">DVIGATEL</p>
+                  <h3>Silindrlar bo'yicha MPG</h3>
+                </div>
+              </div>
+              <div id="cylinder-chart" class="chart-slot"></div>
+            </article>
+
+            <article class="chart-card">
+              <div class="chart-heading">
+                <div>
+                  <p class="chart-kicker">HUDUDLAR</p>
+                  <h3>Hududlar bo'yicha MPG</h3>
+                </div>
+              </div>
+              <div id="origin-chart" class="chart-slot"></div>
+            </article>
+          </div>
+
+          <details class="data-details">
+            <summary>
+              <span>Dataset yozuvlari</span>
+              <span id="table-count" class="table-count"></span>
+            </summary>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Model</th>
+                    <th>MPG</th>
+                    <th>Og'irlik (lb)</th>
+                    <th>Silindr</th>
+                    <th>Yil</th>
+                    <th>Hudud</th>
+                  </tr>
+                </thead>
+                <tbody id="data-rows"></tbody>
+              </table>
+            </div>
+          </details>
+
+          <footer class="page-footer">
+            <span>Manba: Seaborn MPG dataset</span>
+            <span>MPG — bir gallon yoqilg'ida bosib o'tiladigan masofa</span>
+          </footer>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
